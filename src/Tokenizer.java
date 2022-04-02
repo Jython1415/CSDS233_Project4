@@ -26,7 +26,7 @@ public class Tokenizer {
 
         while (scanner.hasNextLine()) {
             for (String word : scanner.nextLine().split(" "))
-                wordList.add(normalizeWord(word));
+                    wordList.add(normalizeWord(word));
         }
 
         cleanWordList();
