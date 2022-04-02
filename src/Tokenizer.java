@@ -67,7 +67,7 @@ public class Tokenizer {
      * Cleans up the wordList by removing empty strings
      */
     private void cleanWordList() {
-        ListIterator iterator = this.wordList.listIterator();
+        ListIterator<String> iterator = this.wordList.listIterator();
 
         while (iterator.hasNext()) {
             if (iterator.next().equals(""))
