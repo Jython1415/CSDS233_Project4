@@ -1,13 +1,24 @@
+import java.util.Comparator;
+
 /**
  * Represents an entry in a HashTable
  * @author Joshua Shew
  */
-public class HashEntry {
+public class HashEntry implements Comparable<HashEntry> {
     /* Stores the string that is the key for the HashEntry */
     private String key;
 
     /* Keeps track of the number of occurences for the String */
     private int value;
+
+    private int rank = 0;
+
+    public int getRank() {
+        return this.rank;
+    }
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
 
     /**
      * Creates a new HashEntry with the specified key and value
@@ -48,5 +59,17 @@ public class HashEntry {
      */
     public void setValue(int value) {
         this.value = value;
+    }
+
+    @Override
+    public int compareTo(HashEntry entry) {
+        return this.getValue() - entry.getValue();
+    }
+
+    public static class ValueCompare implements Comparator<HashEntry> {
+        @Override
+        public int compare(HashEntry e1, HashEntry e2) {
+            return e1.getValue() - e2.getValue();
+        }
     }
 }
