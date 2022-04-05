@@ -39,6 +39,8 @@ public class Tokenizer {
      * @param words
      */
     public Tokenizer(String[] words) {
+        this.wordList = new ArrayList<String>();
+
         for (String word : words) {
             wordList.add(normalizeWord(word));
         }
