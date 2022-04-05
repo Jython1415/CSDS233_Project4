@@ -16,6 +16,8 @@ public class Tokenizer {
      * @param path the path of the txt file to read
      */
     public Tokenizer(String path) throws Exception{
+        this.wordList = new ArrayList<String>();
+
         Scanner scanner;
         try {
             scanner = new Scanner(new File(path));
