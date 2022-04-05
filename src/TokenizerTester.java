@@ -22,6 +22,10 @@ public class TokenizerTester {
         catch (Exception e) {
             Assert.fail(badException + e.toString());
         }
+
+        // Check with String[] input
+        Assert.assertArrayEquals(message, new String[]{"a", "ab", "abc", "abcd"},
+                                          (new Tokenizer(new String[]{"A---- ", "   AB-../", "abC___ --", "abcd"}).wordList().toArray()));
     }
 
     /**
