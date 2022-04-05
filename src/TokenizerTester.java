@@ -1,6 +1,7 @@
 import org.junit.Assert;
 import org.junit.Test;
-
+import java.net.URL;
+import java.io.File;
 public class TokenizerTester {
     
     /**
@@ -11,7 +12,7 @@ public class TokenizerTester {
     public void testTokenizer() throws Exception{
         String message = "The input was not separated and normalized correctly";
         String badException = "The method should not have thrown an exception";
-        String path = "/Users/Joshua/Documents/_CASE/CSDS_233/P4/Project4/src/test.txt";
+        String path = getClass().getResource("test.txt").getPath();
 
         // Check file input
         try {
