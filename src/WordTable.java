@@ -20,7 +20,7 @@ public class WordTable extends HashTable{
             return null;
         }
 
-        return (WordEntry)getTable()[findIndex(key)];
+        return (WordEntry)getTable()[findIndex(key, getTable())];
     }
 
     /**
@@ -34,7 +34,7 @@ public class WordTable extends HashTable{
 
         putEntry(new WordEntry(key, value, this.wordList), getTable());
         
-        incrementEntries();
+        incrementSize();
         updateLoadFactor();
         rehashIfNeeded();
     }
@@ -45,7 +45,7 @@ public class WordTable extends HashTable{
 
         putEntry(new WordEntry(key, value, this.wordList), getTable(), hashCode);
 
-        incrementEntries();
+        incrementSize();
         updateLoadFactor();
         rehashIfNeeded();
     }

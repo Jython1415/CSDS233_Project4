@@ -1,11 +1,8 @@
 import java.util.ArrayList;
 
 public class HashTable {
-    /* Stores the number of slots in the table */
-    private int tableSize;
-
     /* Stores the number of entries stored in the table */
-    private int entries;
+    private int size;
 
     /* Stores the load factor of the table */
     private double loadFactor;
@@ -14,25 +11,43 @@ public class HashTable {
     private HashEntry[] table;
 
     /* The load factor at which to expand and rehash */
-    private final double loadFactorLimit = 0.7;
+    private static final double loadFactorLimit = 0.7;
+
+    /* The default size for a table */
+    private static final int defaultTableSize = 1009;
 
     protected HashEntry[] getTable() {
         return this.table;
     }
 
-    protected void incrementEntries() {
-        this.entries++;
+    /**
+     * Getter method for the size of the HashTable
+     * @return the size (number of entries)
+     */
+    public int getSize() {
+        return this.size;
+    }
+
+    protected void incrementSize() {
+        this.size++;
+    }
+
+    /**
+     * Provides the capacity of the table. The size of the internal array
+     * @return the capacity
+     */
+    public int getCapacity() {
+        return getTable().length;
     }
 
     /**
      * Creates a new HashTable with a size of 1009
      */
     public HashTable() {
-        this.tableSize = 1009; // first prime number over 1000
-        this.entries = 0;
-        this.loadFactor = 0.0;
+        table = new HashEntry[HashTable.defaultTableSize];
 
-        table = new HashEntry[this.tableSize];
+        this.size = 0;
+        this.loadFactor = 0.0;
     }
 
     /**
@@ -40,11 +55,10 @@ public class HashTable {
      * @param tableSize the size of the table
      */
     public HashTable(int tableSize) {
-        this.tableSize = tableSize;
-        this.entries = 0;
+        table = new HashEntry[tableSize];
+        
+        this.size = 0;
         this.loadFactor = 0.0;
-
-        table = new HashEntry[this.tableSize];
     }
 
     /**
@@ -55,9 +69,9 @@ public class HashTable {
     public void put(String key, int value) {
         rehashIfNeeded();
 
-        putEntry(new HashEntry(key, value), this.table);
+        putEntry(new HashEntry(key, value), getTable());
         
-        entries++;
+        incrementSize();
         updateLoadFactor();
         rehashIfNeeded();
     }
@@ -65,9 +79,9 @@ public class HashTable {
     public void put(String key, int value, int hashCode) {
         rehashIfNeeded();
 
-        putEntry(new HashEntry(key, value), this.table, hashCode);
+        putEntry(new HashEntry(key, value), getTable(), hashCode);
 
-        entries++;
+        incrementSize();
         updateLoadFactor();
         rehashIfNeeded();
     }
@@ -78,7 +92,7 @@ public class HashTable {
      * @param value the new value
      */
     public void update(String key, int value) {
-        int currentIndex = findIndex(key);
+        int currentIndex = findIndex(key, getTable());
         
         if (currentIndex == -1) {
             put(key, value);
@@ -89,7 +103,7 @@ public class HashTable {
     }
 
     public int updateRank(String key, int rank) {
-        int currentIndex = findIndex(key);
+        int currentIndex = findIndex(key, getTable());
 
         if (currentIndex == -1) {
             return -1;
@@ -101,7 +115,7 @@ public class HashTable {
     }
 
     public int getRank(String key) {
-        int currentIndex = findIndex(key);
+        int currentIndex = findIndex(key, getTable());
 
         if (currentIndex == -1) {
             return 0;
@@ -117,7 +131,7 @@ public class HashTable {
      * @return -1 or the value
      */
     public int get(String key) {
-        int currentIndex = findIndex(key);
+        int currentIndex = findIndex(key, getTable());
 
         if (currentIndex == -1) {
             return -1;
@@ -133,7 +147,7 @@ public class HashTable {
      * @return -1 or the value
      */
     public int get(String key, int hashCode) {
-        int currentIndex = findIndex(key, hashCode);
+        int currentIndex = findIndex(key, getTable(), hashCode);
 
         if (currentIndex == -1) {
             return -1;
@@ -157,10 +171,9 @@ public class HashTable {
      * Expands the table size and rehashes all entries to the new table
      */
     protected void rehash() {
-        HashEntry[] newTable = new HashEntry[nextPrime(this.tableSize * 2)];
-        this.tableSize *= 2;
+        HashEntry[] newTable = new HashEntry[HashTable.nextPrime(getCapacity() * 2)];
 
-        for (HashEntry entry : this.table) {
+        for (HashEntry entry : getTable()) {
             putEntry(entry, newTable);
         }
 
@@ -174,7 +187,7 @@ public class HashTable {
      * @return -1 if unsuccessful, otherwise the index the entry was inserted at
      */
     protected int putEntry(HashEntry entry, HashEntry[] table) {
-        int currentIndex = findOpenIndex(entry.getKey());
+        int currentIndex = findOpenIndex(entry.getKey(), table);
         
         if (currentIndex == -1) {
             return -1;
@@ -192,7 +205,7 @@ public class HashTable {
      * @return -1 if unsuccessful, otherwise the index the entry was inserted at
      */
     protected int putEntry(HashEntry entry, HashEntry[] table, int hashCode) {
-        int currentIndex = findOpenIndex(entry.getKey(), hashCode);
+        int currentIndex = findOpenIndex(entry.getKey(), table, hashCode);
         
         if (currentIndex == -1) {
             return -1;
@@ -207,15 +220,15 @@ public class HashTable {
      * @param key the key to look for
      * @return the index of the key
      */
-    protected int findIndex(String key) {
-        int currentIndex = Math.abs(key.hashCode()) % this.tableSize;
+    protected int findIndex(String key, HashEntry[] table) {
+        int currentIndex = Math.abs(key.hashCode()) % table.length;
         int counter = 1;
 
-        while (!table[currentIndex].getKey().equals(key) && counter < this.tableSize) {
-            currentIndex = (currentIndex + (counter*counter++)) % this.tableSize;
+        while (!table[currentIndex].getKey().equals(key) && counter < table.length) {
+            currentIndex = (currentIndex + (counter*counter++)) % table.length;
         }
 
-        if (counter >= this.tableSize) {
+        if (counter >= table.length) {
             return -1;
         }
 
@@ -228,15 +241,15 @@ public class HashTable {
      * @param hashCode the custom hash
      * @return the index of the key
      */
-    protected int findIndex(String key, int hashCode) {
-        int currentIndex = Math.abs(hashCode) % this.tableSize;
+    protected int findIndex(String key, HashEntry[] table, int hashCode) {
+        int currentIndex = Math.abs(hashCode) % table.length;
         int counter = 1;
 
-        while (!table[currentIndex].getKey().equals(key) && counter < this.tableSize) {
-            currentIndex = (currentIndex + (counter*counter++)) % this.tableSize;
+        while (!table[currentIndex].getKey().equals(key) && counter < table.length) {
+            currentIndex = (currentIndex + (counter*counter++)) % table.length;
         }
 
-        if (counter >= this.tableSize) {
+        if (counter >= table.length) {
             return -1;
         }
 
@@ -248,15 +261,15 @@ public class HashTable {
      * @param key the key to insert
      * @return the index
      */
-    protected int findOpenIndex(String key) {
-        int currentIndex = Math.abs(key.hashCode()) % this.tableSize;
+    protected int findOpenIndex(String key, HashEntry[] table) {
+        int currentIndex = Math.abs(key.hashCode()) % table.length;
         int counter = 1;
 
-        while (table[currentIndex] != null && counter < this.tableSize + 1) {
-            currentIndex = (currentIndex + (counter*counter++)) % this.tableSize;
+        while (table[currentIndex] != null && counter < table.length + 1) {
+            currentIndex = (currentIndex + (counter*counter++)) % table.length;
         }
 
-        if (counter >= this.tableSize) {
+        if (counter >= table.length) {
             return -1;
         }
 
@@ -269,15 +282,15 @@ public class HashTable {
      * @param hashCode the custom hash code
      * @return the index
      */
-    protected int findOpenIndex(String key, int hashCode) {
-        int currentIndex = Math.abs(hashCode) % this.tableSize;
+    protected int findOpenIndex(String key, HashEntry[] table, int hashCode) {
+        int currentIndex = Math.abs(hashCode) % table.length;
         int counter = 1;
 
-        while (table[currentIndex] != null && counter < this.tableSize) {
-            currentIndex = (currentIndex + (counter*counter++)) % this.tableSize;
+        while (table[currentIndex] != null && counter < table.length) {
+            currentIndex = (currentIndex + (counter*counter++)) % table.length;
         }
 
-        if (counter >= this.tableSize) {
+        if (counter >= table.length) {
             return -1;
         }
 
@@ -288,14 +301,14 @@ public class HashTable {
      * Updates the load factor field
      */
     protected void updateLoadFactor() {
-        this.loadFactor = this.entries / (double)this.tableSize;
+        this.loadFactor = this.size / (double)getCapacity();
     }
 
     /**
      * rehashes the table if needed
      */
     protected void rehashIfNeeded() {
-        if (this.loadFactor > this.loadFactorLimit) {
+        if (this.loadFactor > HashTable.loadFactorLimit) {
             rehash();
         }
     }
@@ -306,7 +319,7 @@ public class HashTable {
      * @return the next prime after the lower limit
      * @author not me
      */
-    protected int nextPrime(int input){
+    protected static int nextPrime(int input){
         input++;
         int limit = (int) Math.sqrt(input);
         int counter;
