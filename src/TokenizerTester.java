@@ -20,7 +20,7 @@ public class TokenizerTester {
         try {
             Assert.assertArrayEquals(message, new String[]{"this", "is", "an", "easy", "sentence", "this", "is", "slightly", "more", "difficult",
                                                         "thisis", "supposed", "to", "be", "even", "more", "difficult", "abcd", "efgh"},
-                                            (new Tokenizer("/Users/Joshua/Documents/_CASE/CSDS_233/P4/Project4/src/test.txt").wordList().toArray()));
+                                              (new Tokenizer("/Users/Joshua/Documents/_CASE/CSDS_233/P4/Project4/src/test.txt").wordList().toArray()));
         }
         catch (Exception e) {
             Assert.fail(badException + e.toString());
