@@ -57,10 +57,8 @@ public class Tokenizer {
      * @param word the word to normalize
      * @return the normalized word
      */
-    private String normalizeWord(String word) {
-        word.toLowerCase().replaceAll(" ", "").replaceAll("\\p{Punct}", "");
-
-        return word;
+    public static String normalizeWord(String word) {
+        return word.toLowerCase().replaceAll(" ", "").replaceAll("\\p{Punct}", "");
     }
 
     /**
