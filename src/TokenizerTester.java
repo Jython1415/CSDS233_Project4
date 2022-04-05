@@ -1,6 +1,5 @@
 import org.junit.Assert;
 import org.junit.Test;
-import java.io.File;
 
 public class TokenizerTester {
     
@@ -14,9 +13,6 @@ public class TokenizerTester {
         String badException = "The method should not have thrown an exception";
 
         // Check file input
-        File f = new File("../src/test.txt");
-
-
         try {
             Assert.assertArrayEquals(message, new String[]{"this", "is", "an", "easy", "sentence", "this", "is", "slightly", "more", "difficult",
                                                         "thisis", "supposed", "to", "be", "even", "more", "difficult", "abcd", "efgh"},
