@@ -67,23 +67,19 @@ public class HashTable {
      * @param value the value associated with the key
      */
     public void put(String key, int value) {
+        incrementSize();
+        updateLoadFactor();
         rehashIfNeeded();
 
         putEntry(new HashEntry(key, value), getTable());
-        
-        incrementSize();
-        updateLoadFactor();
-        rehashIfNeeded();
     }
 
     public void put(String key, int value, int hashCode) {
-        rehashIfNeeded();
-
-        putEntry(new HashEntry(key, value), getTable(), hashCode);
-
         incrementSize();
         updateLoadFactor();
         rehashIfNeeded();
+
+        putEntry(new HashEntry(key, value), getTable(), hashCode);
     }
 
     /**
@@ -118,7 +114,7 @@ public class HashTable {
         int currentIndex = findIndex(key, getTable());
 
         if (currentIndex == -1) {
-            return 0;
+            return -1;
         }
         else {
             return this.table[currentIndex].getRank();
@@ -174,7 +170,9 @@ public class HashTable {
         HashEntry[] newTable = new HashEntry[HashTable.nextPrime(getCapacity() * 2)];
 
         for (HashEntry entry : getTable()) {
-            putEntry(entry, newTable);
+            if (entry != null) {
+                putEntry(entry, newTable);
+            }
         }
 
         this.table = newTable;
@@ -224,11 +222,11 @@ public class HashTable {
         int currentIndex = Math.abs(key.hashCode()) % table.length;
         int counter = 1;
 
-        while (!table[currentIndex].getKey().equals(key) && counter < table.length) {
+        while (table[currentIndex] != null && (!table[currentIndex].getKey().equals(key) && counter < table.length)) {
             currentIndex = (currentIndex + (counter*counter++)) % table.length;
         }
 
-        if (counter >= table.length) {
+        if (counter >= table.length || table[currentIndex] == null) {
             return -1;
         }
 
@@ -245,11 +243,11 @@ public class HashTable {
         int currentIndex = Math.abs(hashCode) % table.length;
         int counter = 1;
 
-        while (!table[currentIndex].getKey().equals(key) && counter < table.length) {
+        while (table[currentIndex] != null && (!table[currentIndex].getKey().equals(key) && counter < table.length)) {
             currentIndex = (currentIndex + (counter*counter++)) % table.length;
         }
 
-        if (counter >= table.length) {
+        if (counter >= table.length || table[currentIndex] == null) {
             return -1;
         }
 

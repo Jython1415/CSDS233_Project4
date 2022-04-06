@@ -11,6 +11,7 @@ public class TokenizerTester {
     public void testTokenizer() throws Exception{
         String message = "The input was not separated and normalized correctly";
         String badException = "The method should not have thrown an exception";
+        
         String path = getClass().getResource("test.txt").getPath();
 
         // Check file input
