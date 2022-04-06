@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
-public class WordTable extends HashTable{
+public class WordTable extends HashTable {
+    /* stores a reference to the master list of all words */
     ArrayList<String> wordList;
 
     public WordTable(ArrayList<String> wordList) {
@@ -30,23 +31,19 @@ public class WordTable extends HashTable{
      */
     @Override
     public void put(String key, int value) {
-        rehashIfNeeded();
-
-        putEntry(new WordEntry(key, value, this.wordList), getTable());
-        
         incrementSize();
         updateLoadFactor();
         rehashIfNeeded();
+
+        putEntry(new WordEntry(key, value, this.wordList), getTable());
     }
 
     @Override
     public void put(String key, int value, int hashCode) {
-        rehashIfNeeded();
-
-        putEntry(new WordEntry(key, value, this.wordList), getTable(), hashCode);
-
         incrementSize();
         updateLoadFactor();
         rehashIfNeeded();
+
+        putEntry(new WordEntry(key, value, this.wordList), getTable(), hashCode);
     }
 }

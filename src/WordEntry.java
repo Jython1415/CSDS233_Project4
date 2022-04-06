@@ -1,61 +1,96 @@
 import java.util.ArrayList;
 
 public class WordEntry extends HashEntry {
-    private HashTable wordFollowing;
-    private HashTable wordPreceding;
+    /* stores all words that follow this word and their frequencies */
+    private HashTable wordFollowingTable;
 
-    private ArrayList<HashEntry> entryFollowing;
-    private ArrayList<HashEntry> entryPreceding;
+    /* stores all words that precede this word and their frequencies */
+    private HashTable wordPrecedingTable;
 
+    /* stores all entries in the wordFollowingTable */
+    private ArrayList<HashEntry> wordFollowingList;
+
+    /* stores all entries in the wordPrecedingList */
+    private ArrayList<HashEntry> wordPrecedingList;
+
+    /**
+     * Creates a new word entry based on the word and a master list of all word being processed by WordStat
+     * @param key the key of the entry
+     * @param value the value of the entry
+     * @param wordList the list of all words
+     */
     public WordEntry(String key, int value, ArrayList<String> wordList) {
         super(key, value);
 
-        this.wordFollowing = new HashTable();
-        this.wordPreceding = new HashTable();
+        this.wordFollowingTable = new HashTable();
+        this.wordPrecedingTable = new HashTable();
 
         process(wordList);
     }
 
-    public HashTable getFollowing() {
-        return this.wordFollowing;
+    /**
+     * Getter method for wordFollowingTable
+     * @return the wordFollowingTable
+     */
+    public HashTable getWordFollowingTable() {
+        return this.wordFollowingTable;
     }
 
-    public HashTable getPreceding() {
-        return this.wordPreceding;
+    /**
+     * Getter method for wordPrecedingTable
+     * @return the wordPrecedingTable
+     */
+    public HashTable getWordPrecedingTable() {
+        return this.wordPrecedingTable;
     }
 
-    public ArrayList<HashEntry> getEntryFollowing() {
-        return entryFollowing;
+    /**
+     * Getter method for wordFollowingList
+     * @return the wordFollowingList
+     */
+    public ArrayList<HashEntry> getWordFollowingList() {
+        return wordFollowingList;
     }
-    public ArrayList<HashEntry> getEntryPreceding() {
-        return entryPreceding;
+    
+    /**
+     * Getter method for wordPrecedingList
+     * @return the wordPrecedingList
+     */
+    public ArrayList<HashEntry> getWordPrecedingList() {
+        return wordPrecedingList;
     }
 
+    /**
+     * Processes the wordFollowingTable, wordPrecedingTable, wordFollowingList, and wordPrecedingList
+     * @param wordList the list of all words to be processed
+     */
     protected void process(ArrayList<String> wordList) {
+        /* add all words to the tables */
         for (int i = 0; i < wordList.size(); i++) {
             if (wordList.get(i).equals(getKey())) {
                 if (i + 1 < wordList.size()) {
-                    wordFollowing.update(wordList.get(i + 1), (wordFollowing.get(wordList.get(i + 1)) == -1 ?
-                                                               1 : wordFollowing.get(wordList.get(i + 1) + 1)));
+                    wordFollowingTable.update(wordList.get(i + 1), (wordFollowingTable.get(wordList.get(i + 1)) == -1 ?
+                                                               1 : wordFollowingTable.get(wordList.get(i + 1) + 1)));
                 }
                 if (i - 1 > -1) {
-                    wordPreceding.update(wordList.get(i - 1), (wordFollowing.get(wordList.get(i - 1)) == -1 ?
-                                                               1 : wordFollowing.get(wordList.get(i - 1) + 1)));
+                    wordPrecedingTable.update(wordList.get(i - 1), (wordFollowingTable.get(wordList.get(i - 1)) == -1 ?
+                                                               1 : wordFollowingTable.get(wordList.get(i - 1) + 1)));
                 }
             }
         }
 
-        this.entryFollowing = this.wordFollowing.exportArray();
-        this.entryPreceding = this.wordPreceding.exportArray();
-        this.entryFollowing.sort(new HashEntry.ValueCompare());
-        this.entryPreceding.sort(new HashEntry.ValueCompare());
+        /* create the lists of entries and sort them */
+        this.wordFollowingList = this.wordFollowingTable.exportArray();
+        this.wordPrecedingList = this.wordPrecedingTable.exportArray();
+        this.wordFollowingList.sort(new HashEntry.ValueCompare());
+        this.wordPrecedingList.sort(new HashEntry.ValueCompare());
 
-        for (int i = 0; i < entryFollowing.size(); i++) {
-            wordFollowing.updateRank(entryFollowing.get(i).getKey(), entryFollowing.size() - i);
+        /* add rankings to the lists based on their ordering */
+        for (int i = 0; i < wordFollowingList.size(); i++) {
+            wordFollowingTable.updateRank(wordFollowingList.get(i).getKey(), wordFollowingList.size() - i);
         }
-
-        for (int i = 0; i < entryPreceding.size(); i++) {
-            wordPreceding.updateRank(entryPreceding.get(i).getKey(), entryPreceding.size() - i);
+        for (int i = 0; i < wordPrecedingList.size(); i++) {
+            wordPrecedingTable.updateRank(wordPrecedingList.get(i).getKey(), wordPrecedingList.size() - i);
         }
     }
 }

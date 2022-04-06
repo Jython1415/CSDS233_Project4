@@ -75,10 +75,10 @@ public class WordStat {
     public String[] mostCommonCollocs(int k, String baseWord, int i) {
         ArrayList<HashEntry> mainList;
         if (i == -1) {
-            mainList = wordTable.getEntry(baseWord).getEntryPreceding();
+            mainList = wordTable.getEntry(baseWord).getWordPrecedingList();
         }
         else {
-            mainList = wordTable.getEntry(baseWord).getEntryFollowing();
+            mainList = wordTable.getEntry(baseWord).getWordFollowingList();
         }
 
         String[] list = new String[k];
