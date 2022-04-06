@@ -70,11 +70,11 @@ public class WordEntry extends HashEntry {
             if (wordList.get(i).equals(getKey())) {
                 if (i + 1 < wordList.size()) {
                     wordFollowingTable.update(wordList.get(i + 1), (wordFollowingTable.get(wordList.get(i + 1)) == -1 ?
-                                                               1 : wordFollowingTable.get(wordList.get(i + 1) + 1)));
+                                                               1 : wordFollowingTable.get(wordList.get(i + 1)) + 1));
                 }
                 if (i - 1 > -1) {
-                    wordPrecedingTable.update(wordList.get(i - 1), (wordFollowingTable.get(wordList.get(i - 1)) == -1 ?
-                                                               1 : wordFollowingTable.get(wordList.get(i - 1) + 1)));
+                    wordPrecedingTable.update(wordList.get(i - 1), (wordPrecedingTable.get(wordList.get(i - 1)) == -1 ?
+                                                               1 : wordPrecedingTable.get(wordList.get(i - 1)) + 1));
                 }
             }
         }

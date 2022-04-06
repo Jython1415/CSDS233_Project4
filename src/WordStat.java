@@ -2,17 +2,17 @@ import java.util.ArrayList;
 
 public class WordStat {
     /* stores the list of words from the input */
-    ArrayList<String> wordList;
+    private ArrayList<String> wordList;
 
     /* stores a table with words and their frequency */
-    WordTable wordTable;
+    public WordTable wordTable;
 
     /* stores an ordered list of the entries */
-    ArrayList<HashEntry> entryList;
+    private ArrayList<HashEntry> entryList;
 
-    HashTable pairTable;
+    public HashTable pairTable;
 
-    ArrayList<HashEntry> pairList;
+    private ArrayList<HashEntry> pairList;
 
     public WordStat(String path) throws Exception {
         this.wordList = (new Tokenizer(path)).wordList();
@@ -25,19 +25,26 @@ public class WordStat {
     }
 
     public int wordCount(String word) {
+        word = Tokenizer.normalizeWord(word);
         return (this.wordTable.get(word) == -1) ? 0 : this.wordTable.get(word);
     }
 
     public int wordPairCount(String w1, String w2) {
+        w1 = Tokenizer.normalizeWord(w1);
+        w2 = Tokenizer.normalizeWord(w2);
         int num = this.pairTable.get(w1 + " " + w2);
         return (num == -1 ? 0 : num);
     }
 
     public int wordRank(String word) {
-        return this.wordTable.getRank(word);
+        word = Tokenizer.normalizeWord(word);
+        int rank = this.wordTable.getRank(word);
+        return rank == -1 ? 0 : rank;
     }
 
     public int wordPairRank(String w1, String w2) {
+        w1 = Tokenizer.normalizeWord(w1);
+        w2 = Tokenizer.normalizeWord(w2);
         int rank = this.pairTable.getRank(w1 + " " + w2);
         return (rank == -1) ? 0 : rank;
     }
@@ -73,6 +80,7 @@ public class WordStat {
     }
 
     public String[] mostCommonCollocs(int k, String baseWord, int i) {
+        baseWord = Tokenizer.normalizeWord(baseWord);
         ArrayList<HashEntry> mainList;
         if (i == -1) {
             mainList = wordTable.getEntry(baseWord).getWordPrecedingList();
@@ -81,8 +89,8 @@ public class WordStat {
             mainList = wordTable.getEntry(baseWord).getWordFollowingList();
         }
 
-        String[] list = new String[k];
-        for (int j = 0; j < k; j++) {
+        String[] list = new String[Math.min(k, mainList.size())];
+        for (int j = 0; j < k && j < mainList.size(); j++) {
             list[j] = mainList.get(mainList.size() - j - 1).getKey();
         }
 
@@ -90,16 +98,19 @@ public class WordStat {
     }
 
     private void processWordList() {
+        /* add all words to the hash table */
         this.wordTable = new WordTable(this.wordList);
         for (String word : this.wordList) {
             this.wordTable.update(word, (this.wordTable.get(word) == -1 ?
                                          1 : this.wordTable.get(word) + 1));
         }
 
+        /* add all word pairs to the hash table */
+        this.pairTable = new HashTable();
         for (int i = 0; i < this.wordList.size() - 1; i++) {
             String pair = this.wordList.get(i) + " " + this.wordList.get(i + 1);
             this.pairTable.update(pair, (this.pairTable.get(pair) == -1 ?
-                                         1 : this.wordTable.get(pair) + 1));
+                                         1 : this.pairTable.get(pair) + 1));
         }
 
         this.entryList = this.wordTable.exportArray();
@@ -115,5 +126,9 @@ public class WordStat {
         for (int i = 0; i < pairList.size(); i++) {
             pairTable.updateRank(pairList.get(i).getKey(), pairList.size() - i);
         }
+    }
+
+    public static void main(String[] args) {
+        
     }
 }

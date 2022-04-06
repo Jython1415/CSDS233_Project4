@@ -4,13 +4,13 @@ import java.lang.reflect.Field;
 
 public class HashTableTester {
     
-    private static HashEntry[] getTable(HashTable table) throws Exception{
+    public static HashEntry[] getTable(HashTable table) throws Exception{
         Field array = table.getClass().getDeclaredField("table");
         array.setAccessible(true);
         return (HashEntry[])array.get(table);
     }
 
-    private static int hashCode(String key, int tableSize) {
+    public static int hashCode(String key, int tableSize) {
         return Math.abs(key.hashCode()) % tableSize;
     }
 

@@ -16,7 +16,7 @@ public class HashTable {
     /* The default size for a table */
     private static final int defaultTableSize = 1009;
 
-    protected HashEntry[] getTable() {
+    public HashEntry[] getTable() {
         return this.table;
     }
 
