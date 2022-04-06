@@ -128,7 +128,9 @@ public class WordStat {
         }
     }
 
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) throws Exception {
+        WordStat frankenstein = new WordStat("/Users/Joshua/Documents/_CASE/CSDS_233/P4/Project4/src/odyssey.txt");
+
+        System.out.println(frankenstein.wordCount("and"));
     }
 }
