@@ -199,6 +199,6 @@ public class WordStat {
         System.out.println("]");
 
         System.out.println("");
-        System.out.println("**Demonstration DONE**");
+        System.out.println("** Demonstration Done **");
     }
 }
