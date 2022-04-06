@@ -19,7 +19,7 @@ public class WordStat {
 
     /**
      * Processes the file input
-     * @param path the file to process and calculate statistics ffor
+     * @param path the file to process and calculate statistics for
      * @throws Exception if the file cannot be found
      */
     public WordStat(String path) throws Exception {
