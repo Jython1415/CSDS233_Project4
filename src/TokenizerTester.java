@@ -46,6 +46,7 @@ public class TokenizerTester {
         Assert.assertEquals(message, "", Tokenizer.normalizeWord("!#$%&'()*+,-./:;<=>?@[]^_`{|}~\""));
         Assert.assertEquals(message, "a", Tokenizer.normalizeWord(",a,"));
         Assert.assertEquals(message, "aa", Tokenizer.normalizeWord("a,a"));
+        Assert.assertEquals(message, "", Tokenizer.normalizeWord("“"));
 
         // check spaces
         Assert.assertEquals(message, "", Tokenizer.normalizeWord(" "));

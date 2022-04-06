@@ -129,8 +129,76 @@ public class WordStat {
     }
 
     public static void main(String[] args) throws Exception {
-        WordStat frankenstein = new WordStat("/Users/Joshua/Documents/_CASE/CSDS_233/P4/Project4/src/odyssey.txt");
+        System.out.println("WordStat frankenstein = new WordStat(\"/Users/Joshua/Documents/_CASE/CSDS_233/P4/Project4/src/frankenstein.txt\");");
+        WordStat frankenstein = new WordStat("/Users/Joshua/Documents/_CASE/CSDS_233/P4/Project4/src/frankenstein.txt");
 
+        System.out.println("DEMONSTRATION WITH FRANKENSTEIN");
+        System.out.println("");
+
+        System.out.println("System.out.println(frankenstein.wordCount(\"and\"));");
         System.out.println(frankenstein.wordCount("and"));
+
+        System.out.println("");
+
+        System.out.println("System.out.println(frankenstein.wordPairCount(\"and\", \"the\"));");
+        System.out.println(frankenstein.wordPairCount("and", "the"));
+
+        System.out.println("");
+
+        System.out.println("System.out.println(frankenstein.wordRank(\"Frankenstein\"));");
+        System.out.println(frankenstein.wordRank("Frankenstein"));
+
+        System.out.println("");
+
+        System.out.println("System.out.println(frankenstein.wordPairRank(\"so\", \"he\"));");
+        System.out.println(frankenstein.wordPairRank("so", "he"));
+
+        System.out.println("");
+
+        System.out.println("String[] s1 = frankenstein.mostCommonWords(20);");
+        System.out.println("// print list s1 nicely");
+        System.out.print("[ ");
+        for (String s : frankenstein.mostCommonWords(20))
+            System.out.print(s + " ");
+        System.out.println("]");
+
+        System.out.println("");
+
+        System.out.println("String[] s1 = frankenstein.leastCommonWords(20);");
+        System.out.println("// print list s1 nicely");
+        System.out.print("[ ");
+        for (String s : frankenstein.leastCommonWords(20))
+            System.out.print(s + " ");
+        System.out.println("]");
+
+        System.out.println("");
+
+        System.out.println("String[] s1 = frankenstein.mostCommonWordPairs(20);");
+        System.out.println("// print list s1 nicely");
+        System.out.print("[ ");
+        for (String s : frankenstein.mostCommonWordPairs(20))
+            System.out.print(s + " ");
+        System.out.println("]");
+
+        System.out.println("");
+
+        System.out.println("String[] s1 = frankenstein.mostCommonCollocs(20, \"Frankenstein\", 1).toString());");
+        System.out.println("// print list s1 nicely");
+        System.out.print("[ ");
+        for (String s : frankenstein.mostCommonCollocs(20, "Frankenstein", 1))
+            System.out.print(s + " ");
+        System.out.println("]");
+
+        System.out.println("");
+
+        System.out.println("String[] s1 = frankenstein.mostCommonCollocs(20, \"Frankenstein\", 01).toString());");
+        System.out.println("// print list s1 nicely");
+        System.out.print("[ ");
+        for (String s : frankenstein.mostCommonCollocs(20, "Frankenstein", -1))
+            System.out.print(s + " ");
+        System.out.println("]");
+
+        System.out.println("");
+        System.out.println("**Demonstration DONE**");
     }
 }
